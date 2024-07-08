@@ -7,62 +7,35 @@ class Solution
 {
 	public:
 	//Function to find sum of weights of edges of the Minimum Spanning Tree.
-	int find(vector<int>& parent,int node){
-	    if(parent[node]==node){
-	        return node;
-	    }
-	    return parent[node]=find(parent,parent[node]);
-	}
-	
-	void uni(vector<int> & parent, vector<int> &rank,int u, int v){
-	    int pu=find(parent,u);
-	    int pv=find(parent,v);
-	    int ru=rank[pu];
-	    int rv=rank[pv];
-	    
-	    if(ru<rv){
-	        parent[pu]=pv;
-	    }else if(rv<ru){
-	        parent[pv]=pu;
-	    }else{
-	        parent[pv]=pu;
-	        rank[pu]++;
-	    }
-	}
-	
     int spanningTree(int V, vector<vector<int>> adj[])
     {
         // code here
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
         
-        vector<pair<int,pair<int,int>>> edges; //wt,u,v
-        for(int i=0;i<V;i++){
-            int node=i;
-            for(auto it:adj[node]){
-                int nbr=it[0];
-                int wt=it[1];
-                edges.push_back({wt,{node,nbr}});
+        vector<int> visited(V,0);
+        pq.push({0,0});
+        int sum=0;
+        while(!pq.empty()){
+            int wt=pq.top().first;
+            int node=pq.top().second;
+            pq.pop();
+            
+            if(visited[node]){
+                continue;
+            }
+            visited[node]=1;
+            sum+=wt;
+            
+            for(auto i:adj[node]){
+                int v=i[0];
+                int dist=i[1];
+                if(!visited[v]){
+                    pq.push({dist,v});
+                }
             }
         }
-        vector<int> parent(V,0);
-        vector<int> rank(V,0);
-        for(int i=0;i<V;i++){
-            parent[i]=i;
-        }
-        int mst=0;
-        sort(edges.begin(),edges.end());
-        for(auto i:edges){
-            int wt=i.first;
-            int u=i.second.first;
-            int v=i.second.second;
-            
-            if(find(parent,u)!=find(parent,v)){
-                mst+=wt;
-                uni(parent,rank,u,v);
-            }
-            
-        }
         
-        return mst;
+        return sum;
     }
 };
 
