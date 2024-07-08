@@ -9,20 +9,20 @@ class Solution {
     int minimumEnergy(vector<int>& height, int n) {
         // Code here
         vector<int> dp(n,-1);
-        
         dp[0]=0;
         
         for(int i=1;i<n;i++){
-            int sc=INT_MAX;
-            int fi=dp[i-1]+abs(height[i]-height[i-1]);
+            int jump1=0;
+            int jump2=INT_MAX;
+            jump1=dp[i-1]+abs(height[i]-height[i-1]);
             if(i>1){
-                sc=dp[i-2]+abs(height[i]-height[i-2]);
+                jump2=dp[i-2]+abs(height[i]-height[i-2]);
             }
-            
-            dp[i]=min(fi,sc);
+            dp[i]=min(jump1,jump2);
         }
         
         return dp[n-1];
+        
     }
 };
 
