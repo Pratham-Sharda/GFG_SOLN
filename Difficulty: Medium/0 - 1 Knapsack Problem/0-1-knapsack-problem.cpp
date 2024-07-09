@@ -13,19 +13,20 @@ class Solution
        // Your code here
        vector<vector<int>> dp(n,vector<int>(W+1,0));
        
-       for(int i=wt[0];i<W+1;i++){
-           dp[0][i]=val[0];
+       for(int i=0;i<W+1;i++){
+           if(wt[0]<=i){
+               dp[0][i]=val[0];
+           }
        }
        
-       for(int idx=1;idx<n;idx++){
-           for(int wei=0;wei<W+1;wei++){
-               int no=dp[idx-1][wei];
-               int yes=INT_MIN;
-               if(wt[idx]<=wei){
-                   yes=val[idx]+dp[idx-1][wei-wt[idx]];
+       for(int i=1;i<n;i++){
+           for(int j=1;j<W+1;j++){
+               int nottake=dp[i-1][j];
+               int take=0;
+               if(j>=wt[i]){
+                   take=dp[i-1][j-wt[i]] +val[i];
                }
-               
-               dp[idx][wei]=max(yes,no);
+               dp[i][j]=max(take,nottake);
            }
        }
        
